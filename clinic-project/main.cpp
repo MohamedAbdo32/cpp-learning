@@ -86,6 +86,10 @@ int main ()  {
   while ( true ) {
     int choice {};
     mainMenu( choice );
+    if ( choice == 5 ) {
+      std::cout << " ####################### EXIT PROGRAM ########################\n";
+      break;
+    }
   }
   return 0;
 }
