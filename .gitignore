@@ -1,0 +1,7 @@
+# C++ executable files
+main
+
+# Emacs backup files
+*~
+# VS code settings
+.vscode/
