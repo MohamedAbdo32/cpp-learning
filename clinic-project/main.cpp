@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <limits>
 #include "patient.hpp"
+#include "appoinment.hpp"
 
 void ignoreLine() {
   std::cin.ignore( std::numeric_limits< std::streamsize >::max() , '\n' ) ;
