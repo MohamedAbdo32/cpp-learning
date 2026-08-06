@@ -1,0 +1,7 @@
+#include "iostream"
+
+int main() {
+  std::cout << "holle word \n" ;
+  std::cout << "test this program \n";
+  return 0;
+}
