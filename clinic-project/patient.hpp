@@ -1,3 +1,6 @@
+#ifndef PATIENT_HPP
+#define PATIENT_HPP
+
 #include <iostream>
 #include <cstddef>
 #include <string>
@@ -35,3 +38,5 @@ public :
   void setDate( Date newDate );
   void setPhone( std::size_t phone );
 };
+
+#endif

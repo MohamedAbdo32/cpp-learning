@@ -1,25 +1,25 @@
-#include <iostream>
+#ifndef APPOINMENT_HPP
+#define APPOINMENT_HPP
 
 enum class AppoinmentType {
-  newExamination = 1 ,
-  consultation ,
-  returnVisit,
+  newExamination = 1,
+  consultation,
+  returnVisit
 };
 
 int AppoinmentGetPrice( AppoinmentType type );
 
 class Appoinment {
-private :
+private:
   AppoinmentType m_type {};
   int m_price {};
 
-public :
+public:
   Appoinment( AppoinmentType type );
 
   // getter function
- 
-  AppoinmentType getType() const { return m_type ; }
-  int getPrice() const { return m_price ; }
+  AppoinmentType getType() const { return m_type; }
+  int getPrice() const { return m_price; }
 
   // setter function
 
@@ -27,3 +27,5 @@ public :
   void setPrice( AppoinmentType type ) ;
 
 };
+
+#endif
