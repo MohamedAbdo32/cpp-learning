@@ -20,6 +20,7 @@ inline int checkInt( int min , int max ) {
       continue;
     }
     if ( input < min || input > max ) {
+      std::cout << " THE INPUT IS NOT VALID , TRY AGAIN ! \n";
       ignoreLine();
       continue;
     }
@@ -40,6 +41,7 @@ inline int checkIntPositive() {
       continue;
      }
      if ( input < 0 ) {
+       std::cout << " THE INPUT IS NOT VALID , TRY AGAIN ! \n";
        ignoreLine();
        continue;
      }
@@ -60,6 +62,7 @@ inline double checkDoublePositive() {
       continue;
     }
     if ( input < 0.0 ) {
+      std::cout << " THE INPUT IS NOT VALID , TRY AGAIN ! \n";
       ignoreLine();
       continue;
     }

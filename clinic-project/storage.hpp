@@ -13,8 +13,8 @@ public:
 
   // getter function
 
-  const std::vector<Patient>& getPatients() const { return m_patients ; }
-  const std::vector<Appoinment>& getAppoinments() const { return m_appoinments ; }
+  std::vector<Patient>& getPatients() { return m_patients ; }
+  std::vector<Appoinment>& getAppoinments()  { return m_appoinments ; }
 
   // set function
 
