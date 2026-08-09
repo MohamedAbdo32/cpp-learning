@@ -13,7 +13,8 @@ void AddToStorage( Storage& store , Patient& patient , Appoinment& appoinment );
 void returnToMainMenu( int& num );
 
 void optionOne ( int& choice , const Date& dateShift , Storage& store  );
-void optionTwo ( Storage& store , int& choice ) ;
+void optionTwo ( Storage& store , int& choice , const Date& dateShift ) ;
+void optionThree ( const Storage& store , const Date& dateShift );
 
 void mainMenu( int& choice , const Date& dateShift ) {
   while ( true )  {
@@ -33,12 +34,25 @@ void mainMenu( int& choice , const Date& dateShift ) {
 }
 int main ()  {
   Date dateShift { setDate() };
+  Patient p1 { 5001 , "Ahmed" , 25 , "5334534534" , dateShift , "headice problem" };
+  Patient p2 { 5002 , "mohamed", 30 , "343434345" , dateShift , "ggdgdfgdvdggdgdf" };
+  Patient p3 { 5003 , "Ali" , 50 , "53453535353" ,{ 9 , 10 , 2026 }, "fdgdfggdfgdgdfgd" };
+  Appoinment a1 { static_cast<AppoinmentType>(1) };
+  Appoinment a2 { static_cast<AppoinmentType>(2) };
+  Appoinment a3 { static_cast<AppoinmentType>(3) };
   Storage store ;
+  store.AddPatientToArray( p1 ) ;
+  store.AddPatientToArray( p2 ) ;
+  store.AddPatientToArray( p3 ) ;
+  store.AddAppoinmentToArray( a1 );
+  store.AddAppoinmentToArray( a2 );
+  store.AddAppoinmentToArray( a3 );
   while ( true ) {
     int choice {};
     mainMenu( choice  , dateShift );
     optionOne( choice , dateShift , store ) ;
-    optionTwo( store , choice ) ;
+    optionTwo( store , choice , dateShift ) ;
+    optionThree( store , dateShift );
     if ( choice == 5 ) {
       std::cout << " ####################### EXIT PROGRAM ########################\n";
       break;

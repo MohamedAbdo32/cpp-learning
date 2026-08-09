@@ -27,7 +27,7 @@ public :
   // getter function
   int getId() const { return m_id ; }
   std::string_view getName() const { return m_name ; }
-  std::string_view getdetials() const { return m_detials ; }
+  std::string_view getDetials() const { return m_detials ; }
   int getAge() const { return m_age ; }
   Date getDate() const { return m_shortDate ; }
   std::string_view getPhone() const { return m_phone ; }

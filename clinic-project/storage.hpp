@@ -16,6 +16,9 @@ public:
   std::vector<Patient>& getPatients() { return m_patients ; }
   std::vector<Appoinment>& getAppoinments()  { return m_appoinments ; }
 
+  const std::vector<Patient>& getConstPatients() const { return m_patients ; }
+  const std::vector<Appoinment>& getConstAppoinments() const { return m_appoinments ; }
+  
   // set function
 
   void AddPatientToArray( Patient& patient ) ;

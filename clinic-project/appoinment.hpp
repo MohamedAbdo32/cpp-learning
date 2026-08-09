@@ -6,8 +6,8 @@ enum class AppoinmentType {
   consultation,
   returnVisit
 };
-
-int AppoinmentGetPrice( AppoinmentType type );
+inline std::string_view getTypeName( AppoimentType type ) ;
+inline int AppoinmentGetPrice( AppoinmentType type );
 
 class Appoinment {
 private:
