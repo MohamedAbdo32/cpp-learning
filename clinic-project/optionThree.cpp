@@ -4,7 +4,8 @@
 #include "storage.hpp"
 #include "validation.hpp"
 
-
+Date setDate() ;
+void showDate( const Date& date ) ;
 
 void showDateShiftPatient( const Date& date  , const Storage& store , bool& checkPatient) {
   for ( std::size_t i {}; i < store.getConstPatients().size() ; ++i ) {
@@ -24,15 +25,19 @@ void showDateShiftPatient( const Date& date  , const Storage& store , bool& chec
   }
 }
 
-void optionThree( const Storage& store , const Date& date ) {
-  while( true ) {
-    
+void optionThree( int& choice , const Storage& store , const Date& date ){
+  if ( choice == 3 ) {
     bool checkPatient { true };
+    std::cout << " ####################################################################\n";
+    std::cout << "                           THE TABLE OF PATIENTS                     \n";
+    std::cout << " ####################################################################\n";
+    showDate( date );
+    std::cout << '\n';
     showDateShiftPatient( date , store , checkPatient ) ;
     if ( !checkPatient ) {
-      std::cout << " THIS DAY IS NOT FOUND , CHECK IT AND TRY AGAIN \n";
-      break;
+      std::cout << " TYPE THE DATE YOU NEED TO NOT THE TABLE OF PATIENTS \n";
+      Date searchDate { setDate() };
+      showDateShiftPatient( searchDate , store , checkPatient ) ;
     }
   }
-
 }

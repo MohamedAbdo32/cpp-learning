@@ -21,8 +21,8 @@ public:
   
   // set function
 
-  void AddPatientToArray( Patient& patient ) ;
-  void AddAppoinmentToArray( Appoinment& appoinment ) ;
+  void AddPatientToArray( const Patient& patient ) ;
+  void AddAppoinmentToArray( const Appoinment& appoinment ) ;
 
   void DelPatientFromArray() ;
   void DelAppoinmentFromArray () ;

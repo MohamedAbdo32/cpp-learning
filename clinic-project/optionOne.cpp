@@ -3,7 +3,7 @@
 #include "patient.hpp"
 #include "appoinment.hpp"
 #include "storage.hpp"
-
+#include "shift.hpp"
 Date setDate() {
   std::cout << " TYPE THE NUMBER OF THE DAY OF THE SHIFT: ";
   int day { checkInt( 1 , 31 ) };
@@ -66,7 +66,7 @@ Patient* searchPatient( std::string_view name , Storage& store ) {
   }
   return nullptr;
 }
-void AddToStorage( Storage& store , Patient& patient , Appoinment& appoinment ) {
+void AddToStorage( Storage& store, const Patient& patient, Appoinment& appoinment ) {
   store.AddPatientToArray( patient );
   store.AddAppoinmentToArray( appoinment ) ;
   std::cout << " #################### COMPLATE ADD TO STORAGE ###################### \n" ;
@@ -77,7 +77,49 @@ void returnToMainMenu( int& num ) {
   std::cout << " 2) TO CONTINUE IN THIS CHOICE \n";
   num =  checkInt( 1 , 2 ) ;
 }
-void optionOne ( int& choice , const Date& dateShift , Storage& store  ) {
+void paymentBill( Storage & store, const Patient& patient, Appoinment& appoinment
+		  , Shift& shift ) {
+  while( true ) {
+    std::cout << " TYPE THE AMOUNT OF MONEY PATIENT PAY TO ADD TO STORAGE : ";
+    int money { checkIntPositive() };
+    if ( money >= appoinment.getPrice() ) {
+      std::cout << " THE REMANDER IS : " << money - appoinment.getPrice() << '\n';
+      AddToStorage( store , patient , appoinment ) ;
+      shift.setBalance( appoinment.getPrice() );
+      break;
+    }else {
+      std::cout << " THE MONEY IS NOT ENOGH TO PAY THE BILL , CHECK AND TRY AGEIN : \n";
+      std::cout << '\n';
+      int num {};
+      returnToMainMenu( num );
+      if ( num == 1 ) {
+	break;
+    }else {
+	continue;
+      }
+    }
+  }
+}
+    
+void printBill ( Storage& store , const Patient& patient , Appoinment& appoinment ,
+		 Shift& shift ) {
+  std::cout << " ######################################################\n";
+  std::cout << "                    THE REPORT OF BILL                 \n";
+  std::cout << " ######################################################\n";
+  std::cout << " THE NAME IS                 : " << patient.getName() << '\n';
+  std::cout << " THE AGE IS                  : " << patient.getAge() << '\n';
+  std::cout << " THE PHONE NUMBER            : " << patient.getPhone() << '\n';
+  std::cout << " THE DATE OF APPOINMENT      : " << patient.getDate().day
+	    << " / " << patient.getDate().month << " / " << patient.getDate().year<< '\n';
+  std::cout << " THE TYPE OF APPOINMENT      : "
+	    << getTypeName( appoinment.getType() ) << '\n';
+  std::cout << " ----------------------------------------------------------- \n";
+  std::cout << " THE PRICE OF THE APPOINMENT : " << appoinment.getPrice() << '\n';
+  std::cout << " ----------------------------------------------------------- \n";
+  std::cout << '\n';
+  paymentBill( store , patient , appoinment , shift );
+}
+void optionOne ( int& choice , const Date& dateShift , Storage& store , Shift& shift  ) {
   if ( choice == 1 ) {
     while ( true ) {
       int num {};
@@ -88,10 +130,9 @@ void optionOne ( int& choice , const Date& dateShift , Storage& store  ) {
       showDate( dateShift ) ;
       Patient patient { createPatient( dateShift ) };
 
-      Appoinment appoin { createAppoinment() };
+      Appoinment appoinment { createAppoinment() };
 
-      std::cout << appoin.getPrice() << '\n' ;
-      AddToStorage( store , patient , appoin ) ;
+      printBill( store, patient, appoinment , shift );
     }
   }
 }

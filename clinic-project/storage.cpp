@@ -1,10 +1,10 @@
 #include <iostream>
 #include "storage.hpp"
 
-void Storage::AddPatientToArray( Patient& patient ) {
+void Storage::AddPatientToArray( const Patient& patient ) {
   m_patients.push_back( patient );
 }
-void Storage::AddAppoinmentToArray( Appoinment& appoinment ) {
+void Storage::AddAppoinmentToArray( const Appoinment& appoinment ) {
   m_appoinments.push_back( appoinment ) ;
 }
 void Storage::DelPatientFromArray() {
