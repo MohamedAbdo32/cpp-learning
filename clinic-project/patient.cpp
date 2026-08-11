@@ -1,9 +1,11 @@
 #include "patient.hpp"
 
-Patient::Patient( int id , std::string_view name , int age , std::string_view phone  ,
+Patient::Patient( std::string_view name , int age , std::string_view phone  ,
 		  std::string_view detials )
-: m_id { id } , m_name { name } , m_age { age } , m_phone { phone } 
-  , m_detials { detials } {}
+: m_name { name } , m_age { age } , m_phone { phone } 
+  , m_detials { detials } {
+  m_id = s_idGenerator ;
+}
 
 void Patient::setName( std::string_view name ) {
   m_name = name ;

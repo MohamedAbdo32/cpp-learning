@@ -4,6 +4,9 @@
 #include "appoinment.hpp"
 #include "storage.hpp"
 #include "pricingEngine.hpp"
+
+int setGetPrice( AppoinmentType type );
+
 Date setDate() {
   std::cout << " TYPE THE NUMBER OF THE DAY OF THE SHIFT: ";
   int day { checkInt( 1 , 31 ) };
@@ -35,10 +38,6 @@ void showDate( const Date& date ) {
   std::cout << date.year << '\n' ;
 }
 Patient createPatient() {
-  std::cout << " TYPE THE NUMBER OF THE ID OF PATIENT: " ;
-  int id { checkIntPositive() };
-  std::cout << '\n';
-
   std::cout << " TYPE THE NAME OF THE PATIENT: " ;
   std::string name {};
   std::getline( std::cin >> std::ws , name ) ;
@@ -57,7 +56,7 @@ Patient createPatient() {
   std::string detials {};
   std::getline( std::cin >> std::ws , detials ) ;
 
-  return { id , name , age , phone , detials };
+  return { name , age , phone , detials };
 }
 Appoinment createAppoinment( const Date& date ) {
   Time appoinmentTime { setTime() };
@@ -69,13 +68,14 @@ Appoinment createAppoinment( const Date& date ) {
 
   return { static_cast<AppoinmentType>( type )  , date  , appoinmentTime };
 }
-Patient* searchPatient( std::string_view name , std::string_view phone , Storage& store ) {
+Patient* searchPatient( std::string_view info, Storage& store ) {
   for( auto& element : store.getPatients() ) {
-    if ( element.getName() == name ) {
+    if ( element.getName() == info ) {
       return &element ;
     }
-    if ( element.getPhone() == phone ) {
+    if ( element.getPhone() == info ) {
       return &element ;
+    }
   }
   return nullptr;
 }
@@ -126,6 +126,9 @@ void printBill ( Storage& store , const Patient& patient , Appoinment& appoinmen
 	    << appoinment.getTime().minute << '\n';
   std::cout << " THE TYPE OF APPOINMENT      : "
 	    << getTypeName( appoinment.getType() ) << '\n';
+  price.setPrice( appoinment.getType() ) ;
+  std::cout << price.getPrice() << '\n';
+  std::cout << setGetPrice( appoinment.getType()) << '\n';
   std::cout << " ----------------------------------------------------------- \n";
   std::cout << " THE PRICE OF THE APPOINMENT : " << price.getPrice() << '\n';
   std::cout << " ----------------------------------------------------------- \n";

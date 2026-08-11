@@ -7,44 +7,46 @@
 Date setDate ();
 void showDate( const Date& dateShift );
 void returnToMainMenu( int& num ) ;
-Patient* searchPatient( std::string_view name , Storage& store );
-
-void getNameToSearch( std::string& name ) {
-  std::cout << " TYPE THE NAME OF THE PATIENT TO FIND : ";
-  std::getline( std::cin >> std::ws , name ) ;
+Patient* searchPatient( std::string_view info , Storage& store );
+Appoinment* searchAppoinment ( int id , Storage& store ) {
+  for ( auto& ele : store.getAppoinments() ) {
+    if ( id == ele.getId() ) {
+      return &ele ;
+    }
+  }
+  return nullptr ;
 }
-void updatePatient( int& choice , Patient& patient ) {
+void getNameToSearch( std::string& info ) {
+  std::cout << " TYPE THE NAME OR PHONE OF THE PATIENT TO FIND : ";
+  std::getline( std::cin >> std::ws , info ) ;
+}
+void updatePatient( int& choice , Patient& patient , Appoinment& appoinment ) {
   if ( choice == 1 ) {
     std::cout << " TYPE THE NEW NAME OF THE PATIENT : ";
     std::string name {};
     std::getline ( std::cin >> std::ws , name ) ;
     patient.setName ( name );
-    std::cout << patient.getName() << '\n';
     std::cout << " ##################### COMPLATE UPDATE THE NAME #####################\n";
   }else if ( choice == 2 ) {
     std::cout << " TYPE THE NEW NUMBER OF THE AGE PATIENT : ";
     int age { checkInt( 1 , 300 ) };
     patient.setAge ( age ) ;
-    std::cout << patient.getAge() << '\n';
     std::cout << " ################### COMPLATE UPDATE THE AGE ########################\n";
   }else if ( choice == 3 ) {
     Date newDate { setDate() };
-    patient.setDate( newDate ) ;
-    std::cout << patient.getDate().day << '\n';
+    appoinment.setDate( newDate ) ;
     std::cout << " ################### COMPLATE UPDATE THE DATE ######################\n";
   }else if ( choice == 4 ) {
     std::cout << " TYPE THE NEW DETIALS OF THE PATIENT: \n";
     std::string detials {};
     std::getline( std::cin >> std::ws , detials ) ;
     patient.setDetials( detials );
-    std::cout << patient.getDetials() << '\n';
     std::cout << " ################### COMPLATE UPDATE THE DETIALS ####################\n";
   }else if ( choice == 5 ) {
     std::cout << " TYPE THE NEW NUMBER OF THE PHONE OF THE PATIENT: \n";
     std::string phone {};
     std::getline( std::cin >> std::ws , phone ) ;
     patient.setPhone ( phone ) ;
-    std::cout << patient.getPhone() << '\n';
     std::cout << " ################ COMPLATE UPDATE THE PHONE #######################\n";
   }
 }
@@ -63,11 +65,21 @@ void updatePatientMenu ( int& choice , const Date& dateShift ) {
   std::cout << " 6) RETURN TO MAIN MENU \n";
   choice = checkInt( 1 , 6 ) ;
 }
-void patientCheck( Patient* patient , int& choice , const Date& dateShift ) {
+void patientCheck( Patient* patient , int& choice , const Date& dateShift , Storage& store ) {
   if ( patient ) {
     Patient& editPatient { *patient };
-    updatePatientMenu( choice , dateShift );
-    updatePatient( choice , editPatient );
+    
+    Appoinment* appoinmentPtr { searchAppoinment( editPatient.getId() , store ) };
+    
+    if ( appoinmentPtr ) {
+      updatePatientMenu( choice , dateShift ) ;
+      
+      Appoinment& appoinment { *appoinmentPtr };
+      
+      updatePatient( choice , editPatient , appoinment );
+    }else {
+      std::cout << " THE PATIENT IS NOT HAVE ANY APPOINMENT IN THE STORAGE \n";
+    }
   }else {
     std::cout << " THE PATIENT IS NOT IN THE STORAGE , CHECK IT AND TRY AGAIN \n" ;
   }
@@ -80,13 +92,13 @@ void optionTwo( Storage& store , int& choice , const Date& dateShift ) {
       return ;
       std::cout << " ######################### RETURN TO MAIN MENU ####################\n";
     }
-    std::string name {};
-    getNameToSearch( name );
+    std::string info {};
+    getNameToSearch( info );
     std::cout << '\n';
-    Patient* patient { searchPatient( name , store ) };
+    Patient* patient { searchPatient( info , store ) };
     while( true ) {
       int choice {};
-      patientCheck( patient , choice , dateShift );
+      patientCheck( patient , choice , dateShift , store );
       if ( choice == 6 ) {
 	std::cout << " ################### RETURN TO MAIN MENU ########################\n";
 	break;

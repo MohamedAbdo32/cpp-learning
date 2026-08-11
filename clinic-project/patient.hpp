@@ -14,9 +14,9 @@ private :
   int m_age {};
   std::string m_phone {};
   std::string m_detials {};
-
+  static inline int s_idGenerator { 5000 };
 public :
-  Patient( int id , std::string_view name , int age , std::string_view phone ,
+  Patient( std::string_view name , int age , std::string_view phone ,
 	   std::string_view detials ) ;
   // getter function
   int getId() const { return m_id ; }

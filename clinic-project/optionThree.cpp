@@ -9,9 +9,9 @@ void showDate( const Date& date ) ;
 
 void showDateShiftPatient( const Date& date  , const Storage& store , bool& checkPatient) {
   for ( std::size_t i {}; i < store.getConstPatients().size() ; ++i ) {
-    if ( date.day == store.getConstPatients()[i].getDate().day &&
-	 date.month == store.getConstPatients()[i].getDate().month &&
-	 date.year == store.getConstPatients()[i].getDate().year ) {
+    if ( date.day == store.getConstAppoinments()[i].getDate().day &&
+	 date.month == store.getConstAppoinments()[i].getDate().month &&
+	 date.year == store.getConstAppoinments()[i].getDate().year ) {
       std::cout << " THE NAME IS : " << store.getConstPatients()[i].getName()
 		<< " AGE IS : " << store.getConstPatients()[i].getAge()
 		<< " PHONE NUMBER : " << store.getConstPatients()[i].getPhone()

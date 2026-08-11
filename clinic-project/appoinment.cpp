@@ -20,7 +20,9 @@ int setGetPrice( AppoinmentType type ) {
 }
 
 Appoinment::Appoinment( AppoinmentType type , Date date , Time time )
-  : m_type { type } , m_date { date } , m_time { time } {}
+  : m_type { type } , m_date { date } , m_time { time } {
+  m_id = s_idGenerator;
+}
 
 void Appoinment::setType( AppoinmentType type ) {
   m_type = type ;

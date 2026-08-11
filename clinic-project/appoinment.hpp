@@ -20,14 +20,17 @@ int AppoinmentGetPrice( AppoinmentType type );
 
 class Appoinment {
 private:
+  int m_id {};
   AppoinmentType m_type {};
   Date m_date {};
   Time m_time {};
+  static inline int s_idGenerator { 5000 };
 public:
   Appoinment( AppoinmentType type , Date date , Time time  );
 
   // getter function
   AppoinmentType getType() const { return m_type; }
+  int getId() const { return m_id ; }
   Date getDate() const { return m_date ; }
   Time getTime() const { return m_time ; }
   // setter function

@@ -14,7 +14,7 @@ void AddToStorage( Storage& store , Patient& patient , Appoinment& appoinment );
 void returnToMainMenu( int& num );
 
 void optionOne ( int& choice , const Date& dateShift , Storage& store , PricingEngine& price );
-void optionTwo ( Storage& store , int& choice , const Date& dateShift ) ;
+void optionTwo ( Storage& store, int& choice, const Date& dateShift ) ;
 void optionThree ( int& choice , const Storage& store , const Date& dateShift );
 void optionFour ( int& choice , const PricingEngine& price ) ;
 
