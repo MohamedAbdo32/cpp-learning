@@ -3,7 +3,7 @@
 #include "patient.hpp"
 #include "appoinment.hpp"
 #include "storage.hpp"
-#include "shift.hpp"
+#include "pricingEngine.hpp"
 
 Date setDate() ;
 void showDate( const Date& date ) ;
@@ -13,10 +13,10 @@ Patient* searchPatient( std::string_view name , Storage& store );
 void AddToStorage( Storage& store , Patient& patient , Appoinment& appoinment );
 void returnToMainMenu( int& num );
 
-void optionOne ( int& choice , const Date& dateShift , Storage& store , Shift& shift );
+void optionOne ( int& choice , const Date& dateShift , Storage& store , PricingEngine& price );
 void optionTwo ( Storage& store , int& choice , const Date& dateShift ) ;
 void optionThree ( int& choice , const Storage& store , const Date& dateShift );
-void optionFour ( int& choice , const Shift& shift ) ;
+void optionFour ( int& choice , const PricingEngine& price ) ;
 
 void mainMenu( int& choice , const Date& dateShift ) {
   while ( true )  {
@@ -37,14 +37,14 @@ void mainMenu( int& choice , const Date& dateShift ) {
 int main ()  {
   Date dateShift { setDate() };
   Storage store ;
-  Shift shift;
+  PricingEngine price ;
   while ( true ) {
     int choice {};
     mainMenu( choice  , dateShift );
-    optionOne( choice , dateShift , store , shift ) ;
+    optionOne( choice , dateShift , store , price ) ;
     optionTwo( store , choice , dateShift ) ;
     optionThree( choice , store , dateShift );
-    optionFour( choice , shift ) ;
+    optionFour( choice , price ) ;
     if ( choice == 5 ) {
       std::cout << " ####################### EXIT PROGRAM ########################\n";
       break;

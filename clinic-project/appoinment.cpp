@@ -19,13 +19,15 @@ int setGetPrice( AppoinmentType type ) {
   return 0 ;
 }
 
-Appoinment::Appoinment( AppoinmentType type ) : m_type { type } {
-  m_price = setGetPrice( m_type ) ;
-}
+Appoinment::Appoinment( AppoinmentType type , Date date , Time time )
+  : m_type { type } , m_date { date } , m_time { time } {}
 
 void Appoinment::setType( AppoinmentType type ) {
   m_type = type ;
 }
-void Appoinment::setPrice( AppoinmentType type ) {
-  m_price = setGetPrice ( type ) ;
+void Appoinment::setDate( Date date ) {
+  m_date = date ;
+}
+void Appoinment::setTime( Time time ) {
+  m_time = time ;
 }
