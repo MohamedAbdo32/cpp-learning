@@ -60,6 +60,7 @@ Patient createPatient() {
 }
 Appoinment createAppoinment( const Date& date ) {
   Time appoinmentTime { setTime() };
+  if ( appoinmentTime.hour ==
   std::cout << " TYPE THE NUMBER OF THE CHOICE: \n " ;
   std::cout << " 1) NEW EXAMINATION -> 200 SAR \n " ;
   std::cout << " 2) CONSULTATION -> 150 SAR \n " ;

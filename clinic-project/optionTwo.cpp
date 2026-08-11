@@ -6,6 +6,7 @@
 
 Date setDate ();
 void showDate( const Date& dateShift );
+Time setTime () ;
 void returnToMainMenu( int& num ) ;
 Patient* searchPatient( std::string_view info , Storage& store );
 Appoinment* searchAppoinment ( int id , Storage& store ) {
@@ -37,12 +38,16 @@ void updatePatient( int& choice , Patient& patient , Appoinment& appoinment ) {
     appoinment.setDate( newDate ) ;
     std::cout << " ################### COMPLATE UPDATE THE DATE ######################\n";
   }else if ( choice == 4 ) {
+    Time newTime { setTime() };
+    appoinment.setTime ( newTime ) ;
+    std::cout << " ################# COMPLATE UPDATE THE TIME ###########################\n";
+  }else if ( choice == 5 ) {
     std::cout << " TYPE THE NEW DETIALS OF THE PATIENT: \n";
     std::string detials {};
     std::getline( std::cin >> std::ws , detials ) ;
     patient.setDetials( detials );
     std::cout << " ################### COMPLATE UPDATE THE DETIALS ####################\n";
-  }else if ( choice == 5 ) {
+  }else if ( choice == 6 ) {
     std::cout << " TYPE THE NEW NUMBER OF THE PHONE OF THE PATIENT: \n";
     std::string phone {};
     std::getline( std::cin >> std::ws , phone ) ;
@@ -60,10 +65,11 @@ void updatePatientMenu ( int& choice , const Date& dateShift ) {
   std::cout << " 1) UPDATE THE NAME OF THE PATIENT \n";
   std::cout << " 2) UPDATE THE AGE OF THE PATIENT \n";
   std::cout << " 3) UPDATE THE DATE OF THE APPOINMENT \n" ;
-  std::cout << " 4) UPDATE THE DETIALS OF THE PATIENT \n";
-  std::cout << " 5) UPDATE THE PHONE OF THE PATIENT \n";
-  std::cout << " 6) RETURN TO MAIN MENU \n";
-  choice = checkInt( 1 , 6 ) ;
+  std::cout << " 4) UPDATE THE TIME OF THE APPOINMENT \n";
+  std::cout << " 5) UPDATE THE DETIALS OF THE PATIENT \n";
+  std::cout << " 6) UPDATE THE PHONE OF THE PATIENT \n";
+  std::cout << " 7) RETURN TO MAIN MENU \n";
+  choice = checkInt( 1 , 7 ) ;
 }
 void patientCheck( Patient* patient , int& choice , const Date& dateShift , Storage& store ) {
   if ( patient ) {
