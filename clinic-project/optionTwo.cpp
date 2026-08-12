@@ -7,6 +7,7 @@
 Date setDate ();
 void showDate( const Date& dateShift );
 Time setTime () ;
+Time checkValidationTime( Storage& store );
 void returnToMainMenu( int& num ) ;
 Patient* searchPatient( std::string_view info , Storage& store );
 Appoinment* searchAppoinment ( int id , Storage& store ) {
@@ -21,7 +22,7 @@ void getNameToSearch( std::string& info ) {
   std::cout << " TYPE THE NAME OR PHONE OF THE PATIENT TO FIND : ";
   std::getline( std::cin >> std::ws , info ) ;
 }
-void updatePatient( int& choice , Patient& patient , Appoinment& appoinment ) {
+void updatePatient( int& choice, Patient& patient, Appoinment& appoinment, Storage& store ) {
   if ( choice == 1 ) {
     std::cout << " TYPE THE NEW NAME OF THE PATIENT : ";
     std::string name {};
@@ -38,7 +39,7 @@ void updatePatient( int& choice , Patient& patient , Appoinment& appoinment ) {
     appoinment.setDate( newDate ) ;
     std::cout << " ################### COMPLATE UPDATE THE DATE ######################\n";
   }else if ( choice == 4 ) {
-    Time newTime { setTime() };
+    Time newTime { checkValidationTime( store ) };
     appoinment.setTime ( newTime ) ;
     std::cout << " ################# COMPLATE UPDATE THE TIME ###########################\n";
   }else if ( choice == 5 ) {
@@ -82,7 +83,7 @@ void patientCheck( Patient* patient , int& choice , const Date& dateShift , Stor
       
       Appoinment& appoinment { *appoinmentPtr };
       
-      updatePatient( choice , editPatient , appoinment );
+      updatePatient( choice , editPatient , appoinment , store );
     }else {
       std::cout << " THE PATIENT IS NOT HAVE ANY APPOINMENT IN THE STORAGE \n";
     }
@@ -105,7 +106,7 @@ void optionTwo( Storage& store , int& choice , const Date& dateShift ) {
     while( true ) {
       int choice {};
       patientCheck( patient , choice , dateShift , store );
-      if ( choice == 6 ) {
+      if ( choice == 7 ) {
 	std::cout << " ################### RETURN TO MAIN MENU ########################\n";
 	break;
       }

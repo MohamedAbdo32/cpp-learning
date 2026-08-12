@@ -31,6 +31,29 @@ Time setTime() {
   std::cout << '\n';
   return { hour , minute };
 }
+Time checkValidationTime( Storage& store ) {
+  Time appoinmentTime {};
+  while( true ) {
+    appoinmentTime = setTime();
+    bool checkRepeatTime { false };
+    for ( const auto& ele : store.getConstAppoinments() ) {
+      if ( appoinmentTime.hour == ele.getTime().hour &&
+           appoinmentTime.minute == ele.getTime().minute ) {
+        checkRepeatTime = true ;
+      }
+    }
+    if ( checkRepeatTime ) {
+      std::cout << " ERROR: This time is already booked , TRY AGAIN !!  \n";
+      continue;
+    }
+    if ( appoinmentTime.hour < 4 || appoinmentTime.hour > 10 ){
+      std::cout << "ERROR: This time out of the shift , TRY AGAIN !!  \n";
+      continue;
+    }
+    break;
+  }
+  return appoinmentTime ;   
+}
 void showDate( const Date& date ) {
   std::cout << " THE DATE OF THE DAY IS : ";
   std::cout << date.day << " / " ;
@@ -58,16 +81,23 @@ Patient createPatient() {
 
   return { name , age , phone , detials };
 }
-Appoinment createAppoinment( const Date& date ) {
-  Time appoinmentTime { setTime() };
-  if ( appoinmentTime.hour ==
-  std::cout << " TYPE THE NUMBER OF THE CHOICE: \n " ;
-  std::cout << " 1) NEW EXAMINATION -> 200 SAR \n " ;
-  std::cout << " 2) CONSULTATION -> 150 SAR \n " ;
-  std::cout << " 3) RETURN VISTI -> 100 SAR\n " ;
+Appoinment createAppoinment( const Date& date , Storage& store ) {
+  Time appoinmentTime { checkValidationTime( store ) };
+  
+  std::cout << " TYPE THE NUMBER OF THE CHOICE: \n" ;
+  std::cout << " 1) NEW EXAMINATION -> 200 SAR \n" ;
+  std::cout << " 2) CONSULTATION    -> 150 SAR \n" ;
+  std::cout << " 3) RETURN VISTI    -> 100 SAR\n" ;
   int type { checkInt( 1 , 3 ) };
 
-  return { static_cast<AppoinmentType>( type )  , date  , appoinmentTime };
+  std::cout << " TYPE THE NUMBER OF THE CHOICE : \n";
+  std::cout << " 1) BOOKED \n";
+  std::cout << " 2) WAITTING \n";
+  std::cout << " 3) COMPLETED \n";
+  std::cout << " 4) CANCELLED \n";
+  int status { checkInt( 1 , 4 ) };
+  return { static_cast<AppoinmentType>( type ), date, appoinmentTime,
+	   static_cast<AppoinmentStatus>(status) };
 }
 Patient* searchPatient( std::string_view info, Storage& store ) {
   for( auto& element : store.getPatients() ) {
@@ -128,8 +158,6 @@ void printBill ( Storage& store , const Patient& patient , Appoinment& appoinmen
   std::cout << " THE TYPE OF APPOINMENT      : "
 	    << getTypeName( appoinment.getType() ) << '\n';
   price.setPrice( appoinment.getType() ) ;
-  std::cout << price.getPrice() << '\n';
-  std::cout << setGetPrice( appoinment.getType()) << '\n';
   std::cout << " ----------------------------------------------------------- \n";
   std::cout << " THE PRICE OF THE APPOINMENT : " << price.getPrice() << '\n';
   std::cout << " ----------------------------------------------------------- \n";
@@ -147,7 +175,7 @@ void optionOne ( int& choice , const Date& dateShift , Storage& store , PricingE
       showDate( dateShift ) ;
       Patient patient { createPatient() };
 
-      Appoinment appoinment { createAppoinment( dateShift) };
+      Appoinment appoinment { createAppoinment( dateShift , store ) };
 
       printBill( store, patient, appoinment , price );
     }
