@@ -28,9 +28,9 @@ std::string_view getStatusName( AppoinmentStatus status ) {
   }
 }
 
-Appoinment::Appoinment( AppoinmentType type , Date date , Time time , AppoinmentStatus status )
-  : m_type { type } , m_date { date } , m_time { time } , m_status { status } {
-  m_id = s_idGenerator;
+Appoinment::Appoinment( int patientId ,  AppoinmentType type , Date date , Time time )
+  : m_patientId { patientId } , m_type { type } , m_date { date } , m_time { time }  {
+  m_id = ++s_idGenerator;
 }
 
 void Appoinment::setType( AppoinmentType type ) {

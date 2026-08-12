@@ -82,6 +82,10 @@ Patient createPatient() {
   return { name , age , phone , detials };
 }
 Appoinment createAppoinment( const Date& date , Storage& store ) {
+
+  std::cout << " TYPE THE ID OF THE PATIENT TO TAKE APPOINMENT: ";
+  int patientId { checkIntPositive() };
+  
   Time appoinmentTime { checkValidationTime( store ) };
   
   std::cout << " TYPE THE NUMBER OF THE CHOICE: \n" ;
@@ -89,15 +93,8 @@ Appoinment createAppoinment( const Date& date , Storage& store ) {
   std::cout << " 2) CONSULTATION    -> 150 SAR \n" ;
   std::cout << " 3) RETURN VISTI    -> 100 SAR\n" ;
   int type { checkInt( 1 , 3 ) };
-
-  std::cout << " TYPE THE NUMBER OF THE CHOICE : \n";
-  std::cout << " 1) BOOKED \n";
-  std::cout << " 2) WAITTING \n";
-  std::cout << " 3) COMPLETED \n";
-  std::cout << " 4) CANCELLED \n";
-  int status { checkInt( 1 , 4 ) };
-  return { static_cast<AppoinmentType>( type ), date, appoinmentTime,
-	   static_cast<AppoinmentStatus>(status) };
+  
+  return { patientId ,static_cast<AppoinmentType>( type ), date, appoinmentTime };
 }
 Patient* searchPatient( std::string_view info, Storage& store ) {
   for( auto& element : store.getPatients() ) {
@@ -110,9 +107,9 @@ Patient* searchPatient( std::string_view info, Storage& store ) {
   }
   return nullptr;
 }
-void AddToStorage( Storage& store, const Patient& patient, Appoinment& appoinment ) {
-  store.AddPatientToArray( patient );
+void addToStorage( Storage& store, Appoinment& appoinment , const Patient& patient ) {
   store.AddAppoinmentToArray( appoinment ) ;
+  store.AddPatientToArray(patient );
   std::cout << " #################### COMPLATE ADD TO STORAGE ###################### \n" ;
 }
 void returnToMainMenu( int& num ) {
@@ -128,7 +125,7 @@ void paymentBill( Storage & store, const Patient& patient, Appoinment& appoinmen
     int money { checkIntPositive() };
     if ( money >= price.getPrice() ) {
       std::cout << " THE REMANDER IS : " << money - price.getPrice() << '\n';
-      AddToStorage( store , patient , appoinment ) ;
+      addToStorage( store, appoinment, patient ) ;
       price.setAllPrice( price.getPrice() );
       break;
     }else {
@@ -148,6 +145,7 @@ void printBill ( Storage& store , const Patient& patient , Appoinment& appoinmen
   std::cout << " ######################################################\n";
   std::cout << "                    THE REPORT OF BILL                 \n";
   std::cout << " ######################################################\n";
+  std::cout << " THE ID OF THE PATIENT IS    : " << patient.getId() << '\n';
   std::cout << " THE NAME IS                 : " << patient.getName() << '\n';
   std::cout << " THE AGE IS                  : " << patient.getAge() << '\n';
   std::cout << " THE PHONE NUMBER            : " << patient.getPhone() << '\n';
@@ -157,6 +155,8 @@ void printBill ( Storage& store , const Patient& patient , Appoinment& appoinmen
 	    << appoinment.getTime().minute << '\n';
   std::cout << " THE TYPE OF APPOINMENT      : "
 	    << getTypeName( appoinment.getType() ) << '\n';
+  std::cout << " THE ID OF APPOINMENT IS     : " << appoinment.getId() << '\n';
+  std::cout << " THE STATUS OF APPOINMENTIS  : " << getStatusName( appoinment.getStatus())<< '\n';
   price.setPrice( appoinment.getType() ) ;
   std::cout << " ----------------------------------------------------------- \n";
   std::cout << " THE PRICE OF THE APPOINMENT : " << price.getPrice() << '\n';
@@ -164,19 +164,32 @@ void printBill ( Storage& store , const Patient& patient , Appoinment& appoinmen
   std::cout << '\n';
   paymentBill( store , patient , appoinment , price );
 }
+void optionMenu(int& optionNum , const Date& dateShift ) {
+  std::cout << " ####################################################################\n";
+  std::cout << "                              THE ADDATION MENU                      \n";
+  std::cout << " ####################################################################\n";
+  showDate( dateShift ) ;
+  std::cout << " TYPE THE NUMBER OF THE OPTION NUMBER : \n";
+  std::cout << " 1) TO ADD NEW PATIENT \n";
+  std::cout << " 2) TO ADD NEW APPOINMENT \n";
+  std::cout << " 3) TO RETURN TO MAIN MENU \n";
+  optionNum = checkInt( 1 , 3 );
+}
 void optionOne ( int& choice , const Date& dateShift , Storage& store , PricingEngine& price  ) {
   if ( choice == 1 ) {
     while ( true ) {
-      int num {};
-      returnToMainMenu( num );
-      if( num == 1 ) {
+      Patient patient;
+      Appoinment appoinment;
+      int optionNum {};
+      optionMenu( optionNum , dateShift ) ;
+
+      if ( optionNum == 1 ) {
+	patient = createPatient();
+      }else if ( optionNum == 2 ) {
+	appoinment = createAppoinment( dateShift , store );
+      }else if( optionNum  == 3 ) {
         break;
       }
-      showDate( dateShift ) ;
-      Patient patient { createPatient() };
-
-      Appoinment appoinment { createAppoinment( dateShift , store ) };
-
       printBill( store, patient, appoinment , price );
     }
   }

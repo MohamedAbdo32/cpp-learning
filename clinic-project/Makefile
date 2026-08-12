@@ -15,4 +15,4 @@ main: appoinment.o patient.o pricingEngine.o storage.o main.o optionOne.o option
 .PHONY: clean
 
 clean:
-	rm -f *.o main
+	rm -f *.o main *.d

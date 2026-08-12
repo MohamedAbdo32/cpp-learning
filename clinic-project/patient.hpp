@@ -16,6 +16,7 @@ private :
   std::string m_detials {};
   static inline int s_idGenerator { 5000 };
 public :
+  Patient() = default;
   Patient( std::string_view name , int age , std::string_view phone ,
 	   std::string_view detials ) ;
   // getter function
