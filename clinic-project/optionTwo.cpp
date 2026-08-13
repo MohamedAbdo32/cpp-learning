@@ -75,41 +75,32 @@ void updatePatientMenu ( int& choice , const Date& dateShift ) {
 void patientCheck( Patient* patient , int& choice , const Date& dateShift , Storage& store ) {
   if ( patient ) {
     Patient& editPatient { *patient };
-    
-    Appoinment* appoinmentPtr { searchAppoinment( editPatient.getId() , store ) };
-    
-    if ( appoinmentPtr ) {
       updatePatientMenu( choice , dateShift ) ;
       
-      Appoinment& appoinment { *appoinmentPtr };
-      
       updatePatient( choice , editPatient , appoinment , store );
-    }else {
-      std::cout << " THE PATIENT IS NOT HAVE ANY APPOINMENT IN THE STORAGE \n";
-    }
+    
   }else {
     std::cout << " THE PATIENT IS NOT IN THE STORAGE , CHECK IT AND TRY AGAIN \n" ;
+    return ;
   }
 }
-void optionTwo( Storage& store , int& choice , const Date& dateShift ) {
-  if ( choice == 2 ) {
-    int num {};
-    returnToMainMenu( num );
-    if ( num == 1 ) {
-      return ;
-      std::cout << " ######################### RETURN TO MAIN MENU ####################\n";
-    }
-    std::string info {};
-    getNameToSearch( info );
-    std::cout << '\n';
-    Patient* patient { searchPatient( info , store ) };
-    while( true ) {
-      int choice {};
-      patientCheck( patient , choice , dateShift , store );
-      if ( choice == 7 ) {
-	std::cout << " ################### RETURN TO MAIN MENU ########################\n";
-	break;
-      }
+void optionEditInfo( Storage& store  , const Date& dateShift ) {
+  // int num {};
+  // returnToMainMenu( num );
+  // if ( num == 1 ) {
+    // return ;
+    // std::cout << " ######################### RETURN TO MAIN MENU ####################\n";
+    // }
+  std::string info {};
+  getNameToSearch( info );
+  std::cout << '\n';
+  Patient* patient { searchPatient( info , store ) };
+  while( true ) {
+    int choice {};
+    patientCheck( patient , choice , dateShift , store );
+    if ( choice == 7 ) {
+      std::cout << " ################### RETURN TO MAIN MENU ########################\n";
+      break;
     }
   }
 }
