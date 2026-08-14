@@ -25,7 +25,7 @@ void mainMenu( int& choice , const Date& dateShift ) {
     std::cout << " THE TIME OF SHIFT IS :> 4 : 00 TO 11 : 00 \n";
     showDate ( dateShift ) ;
     std::cout << " TYPE THE NUMBER OF THE CHOICE : \n";
-    std::cout << " 1) TO ADD NEW PATIENT & APPOINMENT  \n";
+    std::cout << " 1) TO ADD NEW PATIENT & APPOINMENT OR EDIT INFORMATION  \n";
     std::cout << " 2) TO VIEW TODAY`S SCHEDULE \n";
     std::cout << " 3) TO SEARCH PATIENT \n";
     std::cout << " 4) TO DAILY FINANCIAL REPORT  \n";

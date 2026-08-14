@@ -7,16 +7,17 @@
 
 int setGetPrice( AppoinmentType type );
 void optionEditInfo( Storage& store, const Date& dateShift );
+void cancelledAppoinment( Storage& store );
 Date setDate() {
-  std::cout << " TYPE THE NUMBER OF THE DAY OF THE SHIFT: ";
+  std::cout << " TYPE THE NUMBER OF THE DAY    : ";
   int day { checkInt( 1 , 31 ) };
   std::cout << '\n';
 
-  std::cout << " TYPE THE NUMBER OF THE MOUNTH OF THE SHIFT: " ;
+  std::cout << " TYPE THE NUMBER OF THE MOUNTH : " ;
   int month { checkInt( 1 , 12 ) };
   std::cout << '\n';
 
-  std::cout << " TYPE THE NUMBER OF THE YEAR OF THE SHIFT: " ;
+  std::cout << " TYPE THE NUMBER OF THE YEAR   : " ;
   int year { checkInt( 2000 , 9999 )  } ;
   std::cout << '\n';
   return { day , month , year };
@@ -209,8 +210,9 @@ void optionMenu(int& optionNum , const Date& dateShift ) {
   std::cout << " 1) TO ADD NEW PATIENT \n";
   std::cout << " 2) TO ADD NEW APPOINMENT \n";
   std::cout << " 3) TO EDIT THE PATIENT INFO AND APPOINMENT \n";
-  std::cout << " 4) TO RETURN TO MAIN MENU \n";
-  optionNum = checkInt( 1 , 4 );
+  std::cout << " 4) TO CONCELLED THE APPOINTMENT \n";
+  std::cout << " 5) TO RETURN TO MAIN MENU \n";
+  optionNum = checkInt( 1 , 5 );
 }
 void checkInfo( int& check ) {
   std::cout << " CHECK THE INFORMATION AR CORRECT OR NOT \n";
@@ -257,13 +259,14 @@ void optionOne (int& choice, const Date& dateShift, Storage& store, PricingEngin
 	  std::cout << " ############# COMPLETE ADD APPOINTMENT TO STORAGE ###########\n";
 	  std::cout << '\n';
 	  printBill( store , appoinment , price ) ;
-	  break;
 	}else if ( check == 2 ) {
 	  continue ;
 	}
       }else if ( optionNum == 3 ) {
 	optionEditInfo( store , dateShift );
-      }else if( optionNum  == 4 ) {
+      }else if ( optionNum == 4 ) {
+	cancelledAppoinment( store );
+      }else if( optionNum  == 5 ) {
         break;
       }
     }
