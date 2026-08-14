@@ -1,6 +1,8 @@
 #ifndef APPOINMENT_HPP
 #define APPOINMENT_HPP
 
+#include <string_view>
+
 enum class AppoinmentType {
   newExamination = 1,
   consultation,
