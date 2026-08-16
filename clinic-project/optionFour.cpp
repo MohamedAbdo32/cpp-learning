@@ -5,28 +5,41 @@
 #include "storage.hpp"
 #include "pricingEngine.hpp"
 
-void returnToMainMenu( int& num );
+Patient* searchPatient( std::string_view info , Storage& store );
+void getNameToSearch ( std::string& info );
+void showDate( const Date& date ) ;
 
-void printMoneyReport( const PricingEngine& price  )  {
-  std::cout << " ################################################################\n";
-  std::cout << "                         THE BALANCE REPORT                      \n";
-  std::cout << " ################################################################\n";
-  std::cout << " THE BALANCE OF CLINIC ALL DAY IS : " << price.getAllPrice()  << '\n';
+void printPatientInfo(const Date& date, Patient& patient ) {
+  std::cout << " ========================================================================\n";
+  std::cout << "                          THE PATIENT INFORMATION                        \n";
+  std::cout << " ========================================================================\n";
+  showDate( date );
+  std::cout << " THE ID IS : " << patient.getId() << '\n';
+  std::cout << " THE NAME  IS : " << patient.getName() << '\n';
+  std::cout << " THE AGE IS : " << patient.getAge() << '\n';
+  std::cout << " THE PHONE IS : " << patient.getPhone() << '\n';
+  std::cout << " THE DETIALS IS : " << patient.getDetials() << '\n';
   std::cout << " ----------------------------------------------------------------\n";
+  
 }
 
 
 
+void optionSearch( int& choice , Storage& store , const Date& date ) {
+  if ( choice == 3 ) {
+    std::string info {};
+    getNameToSearch( info );
 
-void optionFour( int& choice , const PricingEngine& price  ) {
-  if ( choice == 4 ) {
-    while( true ) {
-      int num {};
-      returnToMainMenu( num );
-      if( num == 1 ) {
-	break;
-      }
-      printMoneyReport( price ) ;
+    Patient* PatientPtr { searchPatient( info , store ) };
+
+    if ( PatientPtr ) {
+      Patient& patient { *PatientPtr };
+      printPatientInfo( date, patient ) ;
+
+    }else {
+      std::cout << " bad \n";
     }
+
+    
   }
 }
