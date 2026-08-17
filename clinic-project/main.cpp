@@ -16,6 +16,7 @@ void returnToMainMenu( int& num );
 void optionOne (int& choice, const Date& dateShift, Storage& store, PricingEngine& price);
 void optionTable ( int& choice , const Storage& store , const Date& dateShift );
 void optionSearch( int& choice , Storage& store, const Date& date ) ;
+void optionFinancial( int& choice , const Storage& store , const Date& date );
 
 void mainMenu( int& choice , const Date& dateShift ) {
   while ( true )  {
@@ -60,6 +61,7 @@ int main ()  {
     optionOne( choice , dateShift , store , price ) ;
     optionTable( choice , store , dateShift );
     optionSearch( choice , store , dateShift ) ;
+    optionFinancial( choice , store , dateShift ) ;
     if ( choice == 5 ) {
       std::cout << " ####################### EXIT PROGRAM ########################\n";
       break;
