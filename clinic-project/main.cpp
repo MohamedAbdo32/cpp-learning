@@ -3,7 +3,6 @@
 #include "patient.hpp"
 #include "appoinment.hpp"
 #include "storage.hpp"
-#include "pricingEngine.hpp"
 
 Date setDate() ;
 void showDate( const Date& date ) ;
@@ -13,7 +12,7 @@ Patient* searchPatient( std::string_view name , Storage& store );
 void AddToStorage( Storage& store , Patient& patient , Appoinment& appoinment );
 void returnToMainMenu( int& num );
 
-void optionOne (int& choice, const Date& dateShift, Storage& store, PricingEngine& price);
+void optionOne (int& choice, const Date& dateShift, Storage& store );
 void optionTable ( int& choice , const Storage& store , const Date& dateShift );
 void optionSearch( int& choice , Storage& store, const Date& date ) ;
 void optionFinancial( int& choice , const Storage& store , const Date& date );
@@ -37,28 +36,11 @@ void mainMenu( int& choice , const Date& dateShift ) {
 }
 int main ()  {
   Date dateShift { setDate() };
-  Storage store ;
-  Patient p1 { "mohamed" , 34 , "0343434344444" , "fsdfd  sfsfsd fsf " };
-  Patient p2 { "Ahmed" , 43 , "4345345345" , "ffsdfsf sdfdf " };
-  Patient p3 { "omar" , 54 , "23423423423" , "fsfdfsf;kjj eer " };
-  Appoinment a1 { 5001 , static_cast<AppoinmentType>(1) , dateShift , { 4 , 0 } };
-  Appoinment a2 { 5001 , static_cast<AppoinmentType>(2) , dateShift , { 4 , 30 } };
-  Appoinment a3 { 5002 , static_cast<AppoinmentType>(3) , dateShift , { 5 , 0 } };
-  Appoinment a4 { 5003 , static_cast<AppoinmentType>(1) , dateShift , { 6 , 30 } };
-
-  store.AddPatientToArray( p1 );
-  store.AddPatientToArray( p2 );
-  store.AddPatientToArray( p3 );
-  store.AddAppoinmentToArray( a1 );
-  store.AddAppoinmentToArray( a2 );
-  store.AddAppoinmentToArray( a3 );
-  store.AddAppoinmentToArray( a4 );
-  
-  PricingEngine price ;
+  Storage store ;  
   while ( true ) {
     int choice {};
     mainMenu( choice  , dateShift );
-    optionOne( choice , dateShift , store , price ) ;
+    optionOne( choice , dateShift , store ) ;
     optionTable( choice , store , dateShift );
     optionSearch( choice , store , dateShift ) ;
     optionFinancial( choice , store , dateShift ) ;

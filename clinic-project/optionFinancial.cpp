@@ -3,7 +3,6 @@
 #include "appoinment.hpp"
 #include "storage.hpp"
 #include "validation.hpp"
-#include "pricingEngine.hpp"
 #include <iomanip>
 #include <sstream>
 
@@ -27,27 +26,32 @@ void printReport( const Date& date , const Storage& store ) {
 	    << std::setw(20) << " TYPE"
 	    << std::setw(10) << " PRICE" << '\n';
   std::cout << " ----------------------------------------------------------------------\n";
-  int counter {};
+  int countCompleted {};
   int allBalance {};
   for ( std::size_t i {}; i < store.getConstAppoinments().size() ; ++i ) {
-    std::ostringstream time ;
-    time << std::setfill('0')
-	 << std::setw(2) << store.getConstAppoinments()[i].getTime().hour << ":"
-	 << std::setw(2) << store.getConstAppoinments()[i].getTime().minute ;
-    std::cout << " ";
-    std::cout << std::left
-	      << std::setw(10)
-	      << printName(store.getConstAppoinments()[i].getPatientId() , store )
-	      << std::setw(20) << time.str()
-	      << std::setw(20) << getTypeName( store.getConstAppoinments()[i].getType() )
-	      << setGetPrice ( store.getConstAppoinments()[i].getType() )
-	      << " SAR" << '\n';
-    ++counter;
-    allBalance += setGetPrice ( store.getConstAppoinments()[i].getType() );
+    if ( store.getConstAppoinments()[i].getStatus() == AppoinmentStatus::completed  &&
+	 date.day == store.getConstAppoinments()[i].getDate().day && date.month ==
+	 store.getConstAppoinments()[i].getDate().month && date.year ==
+	 store.getConstAppoinments()[i].getDate().year ) {
+      std::ostringstream time ;
+      time << std::setfill('0')
+	   << std::setw(2) << store.getConstAppoinments()[i].getTime().hour << ":"
+	   << std::setw(2) << store.getConstAppoinments()[i].getTime().minute ;
+      std::cout << " ";
+      std::cout << std::left
+		<< std::setw(10)
+		<< printName(store.getConstAppoinments()[i].getPatientId() , store )
+		<< std::setw(20) << time.str()
+		<< std::setw(20) << getTypeName( store.getConstAppoinments()[i].getType() )
+		<< setGetPrice ( store.getConstAppoinments()[i].getType() )
+		<< " SAR" << '\n';
+      ++countCompleted;
+      allBalance += setGetPrice ( store.getConstAppoinments()[i].getType() );
+    }
   }
   std::cout << " -----------------------------------------------------------------------\n";
   std::cout << '\n';
-  std::cout << " NUMBER OF COMPLETED VISITS : " << counter << '\n';
+  std::cout << " NUMBER OF COMPLETED VISITS : " << countCompleted << '\n';
   std::cout << " TOTAL COLLECTED            : " << allBalance << '\n';
   std::cout << '\n';
   std::cout << '\n';
@@ -61,9 +65,12 @@ void printReport( const Date& date , const Storage& store ) {
 	    << std::setw(20) << "STATUS" << '\n';
   std::cout << " -----------------------------------------------------------------------\n";
   for ( std::size_t i {}; i < store.getConstAppoinments().size() ; ++i ) {
-    if ( getStatusName( store.getConstAppoinments()[i].getStatus() ) == "BOOKED" ||
-	 getStatusName( store.getConstAppoinments()[i].getStatus() ) == "WAITING" ||
-	 getStatusName( store.getConstAppoinments()[i].getStatus() ) == "CANCELLED" ) {
+    if ( date.day == store.getConstAppoinments()[i].getDate().day && date.month ==
+	 store.getConstAppoinments()[i].getDate().month && date.year ==
+	 store.getConstAppoinments()[i].getDate().year &&
+	 ( store.getConstAppoinments()[i].getStatus() == AppoinmentStatus::booked ||
+	 store.getConstAppoinments()[i].getStatus() == AppoinmentStatus::waitting ||
+	   store.getConstAppoinments()[i].getStatus() == AppoinmentStatus::cancelled) ) {
       std::ostringstream time;
       time << std::setfill('0')
 	   << std::setw(2) << store.getConstAppoinments()[i].getTime().hour << ":"
@@ -78,7 +85,44 @@ void printReport( const Date& date , const Storage& store ) {
     }
   }
   std::cout << " -------------------------------------------------------------------------\n";
+  std::cout << '\n';
+  std::cout << " =========================================================================\n";
+  std::cout << "                          FINANCIAL SUMMARY                               \n";
+  std::cout << " =========================================================================\n";
+  int countBooked {};
+  int countWaiting {};
+  int countCancelled {};
+  for ( std::size_t i {}; i < store.getConstAppoinments().size() ; ++i ) {
+    if (  ( date.day == store.getConstAppoinments()[i].getDate().day && date.month ==
+	 store.getConstAppoinments()[i].getDate().month
+	 && date.year == store.getConstAppoinments()[i].getDate().year )
+       && store.getConstAppoinments()[i].getStatus() == AppoinmentStatus::booked){
+      ++countBooked ;
+    }
+    if ( ( date.day == store.getConstAppoinments()[i].getDate().day
+	   && date.month == store.getConstAppoinments()[i].getDate().month
+	   && date.year == store.getConstAppoinments()[i].getDate().year) &&
+	 store.getConstAppoinments()[i].getStatus() == AppoinmentStatus::waitting){
+      ++countWaiting ;
+    }
+    if ( ( date.day == store.getConstAppoinments()[i].getDate().day
+	   && date.month == store.getConstAppoinments()[i].getDate().month
+	   && date.year == store.getConstAppoinments()[i].getDate().year ) &&
+	 store.getConstAppoinments()[i].getStatus() == AppoinmentStatus::cancelled ){
+      ++countCancelled ;
+    }
+  }
+    std::cout << " COMPLETED VISITED : " << countCompleted << '\n';
+    std::cout << " BOOKED VISITED    : " << countBooked << '\n';
+    std::cout << " WAITING VISITED   : " << countWaiting << '\n';
+    std::cout << " CANCELLED VISITED : " << countCancelled << '\n';
+    std::cout << '\n';
+    std::cout << " TOTAL COLLECTED   : " << allBalance << '\n';
+    std::cout << '\n';
+    std::cout << " =======================================================================\n";
+    std::cout << '\n';
 }
+  
 
 
 void optionFinancial( int& choice , const Storage& store , const Date& date ) {
@@ -88,58 +132,3 @@ void optionFinancial( int& choice , const Storage& store , const Date& date ) {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-//======================================================================
-  //                     DAILY FINANCIAL REPORT
-  //======================================================================
-  //THE DATE OF THE DAY IS : 17 / 8 / 2026
-
-  //----------------------------------------------------------------------
-  //                COMPLETED VISITS
-  //----------------------------------------------------------------------
-
-  //Patient        Appointment Time     Type              Price/
-  //----------------------------------------------------------------------
-  //mohamed        04:00                NEW EXAMINATION   200 SAR
-  //Ahmed          05:00                CONSULTATION      150 SAR
-  //omar           06:30                RETURN VISIT      100 SAR
-  //----------------------------------------------------------------------
-
-  //NUMBER OF COMPLETED VISITS : 3
-  //TOTAL COLLECTED            : 450 SAR
-
-
-  //----------------------------------------------------------------------
-  //                OTHER APPOINTMENTS
-  //----------------------------------------------------------------------
-
-  //Patient        Time       Status
-  //----------------------------------------------------------------------
-  //Ali            07:00      BOOKED
-  //Sara           08:00      WAITING
-  //Khaled         09:00      CANCELLED
-  //----------------------------------------------------------------------
-
-
-  //======================================================================
-  //                     FINANCIAL SUMMARY/
-  //======================================================================
-
-  //COMPLETED VISITS  : 3
-  //BOOKED VISITS     : 1
-  //WAITING VISITS    : 1
-  //CANCELLED VISITS  : 1
-
-  //TOTAL COLLECTED   : 450 SAR
-
-  //======================================================================
-

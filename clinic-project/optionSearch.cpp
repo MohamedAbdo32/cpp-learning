@@ -3,7 +3,6 @@
 #include "appoinment.hpp"
 #include "validation.hpp"
 #include "storage.hpp"
-#include "pricingEngine.hpp"
 #include <iomanip>
 #include <sstream>
 
@@ -66,7 +65,7 @@ void optionSearch( int& choice , Storage& store , const Date& date ) {
       printPatientInfo( date, patient , store ) ;
 
     }else {
-      std::cout << " bad \n";
+      std::cout << " ERROR : NO PATIENT WITH THIS ID CHECK IT AND TRY AGAIN \n";
     }
 
     

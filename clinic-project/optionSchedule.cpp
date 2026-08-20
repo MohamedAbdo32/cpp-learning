@@ -19,7 +19,7 @@ std::string_view printName( int id , const Storage& store ) {
   return "unkown";
 }
 
-void showDateShiftPatient( const Date& date  , const Storage& store , bool& checkPatient) {
+void showDateShiftPatient( const Date& date  , const Storage& store ) {
   std::cout << std::left << std::setw(10) << "Time"
 	    << std::setw(20) << "Patient" << std::setw(20) << "Appointment Type"
 	    << std::setw(15) << "Status" << '\n';
@@ -45,8 +45,6 @@ void showDateShiftPatient( const Date& date  , const Storage& store , bool& chec
 		<< std::setw(20) << getTypeName( store.getConstAppoinments()[i].getType() )
 		<< std::setw(15) << getStatusName( store.getConstAppoinments()[i].getStatus())
 		<< '\n';
-    }else {
-      checkPatient = false ;
     }
   }
   std::cout << " =====================================================================\n";
@@ -54,17 +52,16 @@ void showDateShiftPatient( const Date& date  , const Storage& store , bool& chec
 
 void optionTable( int& choice , const Storage& store , const Date& date ){
   if ( choice == 2 ) {
-    bool checkPatient { true };
     std::cout << " ====================================================================\n";
     std::cout << "                           TODAY`S SCHEDULE                          \n";
     std::cout << " ====================================================================\n";
     showDate( date );
     std::cout << '\n';
-    showDateShiftPatient( date , store , checkPatient ) ;
-    if ( !checkPatient ) {
-      std::cout << " TYPE THE DATE YOU NEED TO NOT THE TABLE OF PATIENTS \n";
+    showDateShiftPatient( date , store ) ;
+    std::cout << '\n';
+    std::cout << '\n';
+      std::cout << " TYPE THE DATE YOU NEED TO SHOW THE SCHEDULE OF PATIENTS \n";
       Date searchDate { setDate() };
-      showDateShiftPatient( searchDate , store , checkPatient ) ;
-    }
+      showDateShiftPatient( searchDate , store ) ;
   }
 }

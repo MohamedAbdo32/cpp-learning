@@ -7,7 +7,7 @@
 Date setDate ();
 void showDate( const Date& dateShift );
 Time setTime () ;
-Time checkValidationTime( Storage& store );
+Time checkValidationTime( const Appoinment& appoinment , const Date& date ,  Storage& store );
 void returnToMainMenu( int& num ) ;
 Patient* searchPatient( std::string_view info , Storage& store );
 void printAppoinmentInfo( const Appoinment& appoinment ) ;
@@ -55,7 +55,7 @@ void updateAppoinment( int& choice , Appoinment& appoinment, Storage& store ) {
     appoinment.setDate( newDate ) ;
     std::cout << " ################### COMPLATE UPDATE THE DATE ######################\n";
   }else if ( choice == 2 ) {
-    Time newTime { checkValidationTime( store ) };
+   Time newTime { checkValidationTime( appoinment, appoinment.getDate() , store ) };
     appoinment.setTime ( newTime ) ;
     std::cout << " ################# COMPLATE UPDATE THE TIME #######################\n";
  }else if ( choice == 3 ) {
@@ -179,8 +179,9 @@ void cancelledAppoinment( Storage& store) {
 	return ;
       }
       appoinment.setStatus( AppoinmentStatus::cancelled );
-      std::cout <<getStatusName( appoinment.getStatus());
+      std::cout << '\n' ;
       std::cout << " ################ COMPLETED CANCELLED APPOINMENT ################\n";
+      std::cout << '\n';
     }else {
       return ;
     }

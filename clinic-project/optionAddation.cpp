@@ -3,11 +3,13 @@
 #include "patient.hpp"
 #include "appoinment.hpp"
 #include "storage.hpp"
-#include "pricingEngine.hpp"
+#include <iomanip>
+#include <sstream>
 
 int setGetPrice( AppoinmentType type );
 void optionEditInfo( Storage& store, const Date& dateShift );
 void cancelledAppoinment( Storage& store );
+int setGetPrice ( AppoinmentType type ) ;
 Date setDate() {
   std::cout << " TYPE THE NUMBER OF THE DAY    : ";
   int day { checkInt( 1 , 31 ) };
@@ -32,15 +34,22 @@ Time setTime() {
   std::cout << '\n';
   return { hour , minute };
 }
-Time checkValidationTime( Storage& store ) {
+Time checkValidationTime( const Appoinment& appoinment, const Date& date , Storage& store ) {
   Time appoinmentTime {};
   while( true ) {
     appoinmentTime = setTime();
     bool checkRepeatTime { false };
-    for ( const auto& ele : store.getConstAppoinments() ) {
-      if ( appoinmentTime.hour == ele.getTime().hour &&
-           appoinmentTime.minute == ele.getTime().minute ) {
-        checkRepeatTime = true ;
+    for( const auto& ele : store.getConstAppoinments() ) {
+      if ( appoinment.getId() != ele.getId() ) {
+	
+	if ( appoinmentTime.hour == ele.getTime().hour &&
+	     appoinmentTime.minute == ele.getTime().minute ) {
+	  if ( ele.getDate().day == date.day && ele.getDate().month == date.month &&
+	       ele.getDate().year == date.year &&
+	       ele.getStatus() != AppoinmentStatus::cancelled ) {
+	    checkRepeatTime = true ;
+	  }
+	}
       }
     }
     if ( checkRepeatTime ) {
@@ -60,6 +69,14 @@ void showDate( const Date& date ) {
   std::cout << date.day << " / " ;
   std::cout << date.month << " / " ;
   std::cout << date.year << '\n' ;
+}
+Patient* searchPatientById( int id , Storage& store ) {
+  for ( auto& element : store.getPatients() ) {
+    if ( id == element.getId() ) {
+      return &element;
+    }
+  }
+  return nullptr;
 }
 Patient createPatient() {
   std::cout << " TYPE THE NAME OF THE PATIENT: " ;
@@ -82,20 +99,44 @@ Patient createPatient() {
 
   return { name , age , phone , detials };
 }
-Appoinment createAppoinment( const Date& date , Storage& store ) {
+void createAppoinment(  Appoinment& appoinment , const Date& date , Storage& store ) {
+  while ( true ) {
 
-  std::cout << " TYPE THE ID OF THE PATIENT TO TAKE APPOINMENT: ";
-  int patientId { checkIntPositive() };
-  
-  Time appoinmentTime { checkValidationTime( store ) };
-  
-  std::cout << " TYPE THE NUMBER OF THE CHOICE: \n" ;
-  std::cout << " 1) NEW EXAMINATION -> 200 SAR \n" ;
-  std::cout << " 2) CONSULTATION    -> 150 SAR \n" ;
-  std::cout << " 3) RETURN VISTI    -> 100 SAR\n" ;
-  int type { checkInt( 1 , 3 ) };
-  
-  return { patientId ,static_cast<AppoinmentType>( type ), date, appoinmentTime };
+    std::cout << " TYPE THE ID OF THE PATIENT TO TAKE APPOINMENT: ";
+    int patientId { checkIntPositive() };
+    std::cout << '\n';
+    
+    Patient* patientPtr { searchPatientById( patientId , store ) };
+    
+    if ( patientPtr ) {
+      
+      std::cout << " IS THE DATE IN THE SAME DAY OR BOOKED IN THE DIFFERENT DAY : \n";
+      std::cout << " 1) IN THE SAME DATE \n";
+      std::cout << " 2) IN THE DIFFERENT DAY \n";
+      int isDate { checkInt ( 1 , 2 ) };
+      Date appoinmentDate {};
+      if ( isDate == 1 ) {
+	appoinmentDate = date ;
+      }else {
+	appoinmentDate = setDate() ;
+    }
+      
+      Time appoinmentTime { checkValidationTime( appoinment, appoinmentDate, store ) };
+      
+      std::cout << " TYPE THE NUMBER OF THE CHOICE: \n" ;
+      std::cout << " 1) NEW EXAMINATION -> 200 SAR \n" ;
+      std::cout << " 2) CONSULTATION    -> 150 SAR \n" ;
+      std::cout << " 3) RETURN VISTI    -> 100 SAR\n" ;
+      int type { checkInt( 1 , 3 ) };
+      
+      appoinment = { patientId,static_cast<AppoinmentType>( type ),
+		     appoinmentDate,appoinmentTime};
+      break;
+    }else {
+      std::cout << " ERROR : NO PATIENT WITH THIS ID , CHECK IT AND TRY AGAIN \n";
+      continue;
+    }
+  }
 }
 Patient* searchPatient( std::string_view info, Storage& store ) {
   for( auto& element : store.getPatients() ) {
@@ -104,14 +145,6 @@ Patient* searchPatient( std::string_view info, Storage& store ) {
     }
     if ( element.getPhone() == info ) {
       return &element ;
-    }
-  }
-  return nullptr;
-}
-Patient* searchPatientById( int id , Storage& store ) {
-  for ( auto& element : store.getPatients() ) {
-    if ( id == element.getId() ) {
-      return &element;
     }
   }
   return nullptr;
@@ -126,13 +159,12 @@ void returnToMainMenu( int& num ) {
   std::cout << " 2) TO CONTINUE IN THIS CHOICE \n";
   num =  checkInt( 1 , 2 ) ;
 }
-void paymentBill( PricingEngine& price  ) {
+void paymentBill( Appoinment& appoinment ) {
   while( true ) {
     std::cout << " TYPE THE AMOUNT OF MONEY PATIENT PAY TO ADD TO STORAGE : ";
     int money { checkIntPositive() };
-    if ( money >= price.getPrice() ) {
-      std::cout << " THE REMANDER IS : " << money - price.getPrice() << '\n';
-      price.setAllPrice( price.getPrice() );
+    if ( money >= setGetPrice( appoinment.getType() ) ) {
+      std::cout << " THE REMANDER IS : " << money - setGetPrice( appoinment.getType() ) << '\n';
       std::cout << '\n';
       std::cout << " THANK YOU FOR PAY THE BILL OF THE PATIENT \n";
       std::cout << '\n';
@@ -167,12 +199,17 @@ void printAppoinmentInfo( const Appoinment& appoinment ) {
   std::cout << " THE ID OF APPOINMENT     : " << appoinment.getId() << '\n';
   std::cout << " THE DATE OF APPOINMENT   : " << appoinment.getDate().day << " / "
 	    << appoinment.getDate().month << " / " << appoinment.getDate().year << '\n';
-  std::cout << " THE TIME OF APPOINTMENT  : " << appoinment.getTime().hour << " : "
-	    << appoinment.getTime().minute << '\n';
+  std::cout << std::left
+	    << std::setw(30) << " THE TIME OF THE APPOINMENT  : ";
+  std::ostringstream time ;
+  time << std::setfill('0')
+       << std::setw(2) << appoinment.getTime().hour << ":"
+       << std::setw(2) << appoinment.getTime().minute ;
+  std::cout << time.str() << '\n';
   std::cout << " THE STATUS OF APPOINMENT : " << getStatusName( appoinment.getStatus() ) << '\n';
 }
   
-void printBill ( Storage& store , Appoinment& appoinment , PricingEngine& price  ) {
+void printBill ( Storage& store , Appoinment& appoinment ) {
   Patient* patientPtr { searchPatientById( appoinment.getPatientId() , store ) } ;
   if ( patientPtr ) {
     Patient& patient { *patientPtr };
@@ -191,12 +228,11 @@ void printBill ( Storage& store , Appoinment& appoinment , PricingEngine& price 
 	      << getTypeName( appoinment.getType() ) << '\n';
     std::cout << " THE ID OF APPOINMENT IS     : " << appoinment.getId() << '\n';
     std::cout << " THE STATUS OF APPOINMENTIS  : "<<getStatusName(appoinment.getStatus())<<'\n';
-    price.setPrice( appoinment.getType() ) ;
     std::cout << " ----------------------------------------------------------- \n";
-    std::cout << " THE PRICE OF THE APPOINMENT : " << price.getPrice() << '\n';
+    std::cout << " THE PRICE OF THE APPOINMENT : " << setGetPrice(appoinment.getType() ) << '\n';
     std::cout << " ----------------------------------------------------------- \n";
     std::cout << '\n';
-    paymentBill( price );
+    paymentBill( appoinment );
   }else {
     std::cout << " THE PATIENT IS NOT FOUND CHECK ID PATIENT \n";
   }
@@ -220,7 +256,7 @@ void checkInfo( int& check ) {
   std::cout << " 2) TO NOT CORRECT AND TRY INPUT INFO AGAIN \n";
   check = checkInt( 1, 2 );
 }
-void optionOne (int& choice, const Date& dateShift, Storage& store, PricingEngine& price){
+void optionOne (int& choice, const Date& dateShift, Storage& store ){
   if ( choice == 1 ) {
     while ( true ) {
       Patient patient;
@@ -247,7 +283,7 @@ void optionOne (int& choice, const Date& dateShift, Storage& store, PricingEngin
 	  }
 	}
       }else if ( optionNum == 2 ) {
-	appoinment = createAppoinment( dateShift , store );
+	createAppoinment(appoinment, dateShift , store );
 	std::cout << '\n';
 	printAppoinmentInfo( appoinment ) ;
 	std::cout << '\n';
@@ -258,7 +294,7 @@ void optionOne (int& choice, const Date& dateShift, Storage& store, PricingEngin
 	  store.AddAppoinmentToArray( appoinment ) ;
 	  std::cout << " ############# COMPLETE ADD APPOINTMENT TO STORAGE ###########\n";
 	  std::cout << '\n';
-	  printBill( store , appoinment , price ) ;
+	  printBill( store , appoinment) ;
 	}else if ( check == 2 ) {
 	  continue ;
 	}

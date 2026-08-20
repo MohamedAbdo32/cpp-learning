@@ -4,7 +4,7 @@
 CXX = g++
 CXXFLAGS = -Wextra -Wall -Werror -g -MMD
 
-main: appoinment.o patient.o pricingEngine.o storage.o main.o optionOne.o optionTwo.o optionThree.o optionFour.o optionFinancial.o
+main: appoinment.o patient.o storage.o main.o optionAddation.o optionEdition.o optionSchedule.o optionSearch.o optionFinancial.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 %.o: %.cpp

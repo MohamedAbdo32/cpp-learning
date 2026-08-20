@@ -43,5 +43,16 @@ void Appoinment::setTime( Time time ) {
   m_time = time ;
 }
 void Appoinment::setStatus( AppoinmentStatus status ) {
-  m_status = status ;
+  if ( m_status == AppoinmentStatus::booked &&
+       status == AppoinmentStatus::waitting ) {
+    m_status = status ;
+  }else if ( m_status == AppoinmentStatus::booked &&
+	     status == AppoinmentStatus::cancelled ) {
+    m_status = status;
+  }else if ( m_status == AppoinmentStatus::waitting &&
+	     status == AppoinmentStatus::completed ) {
+    m_status = status ;
+  }else {
+    std::cout << "ERROR: YOU CAN DO THIS THIS IS NOT CORRECT \n" ;
+  }
 }
