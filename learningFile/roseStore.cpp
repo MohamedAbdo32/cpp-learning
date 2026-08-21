@@ -5,6 +5,8 @@
 #include <cassert>
 #include <random>
 #include <chrono>
+#include <limits>
+#include <cstdlib>
 
 namespace Random {
   std::mt19937 generate() {
@@ -42,19 +44,68 @@ namespace Potion {
   static_assert( Type::count == std::size( potionCosts ) );
 
 }
+void ignoreLine() {
+  std::cin.ignore ( std::numeric_limits<std::streamsize>::max() , '\n' ) ;
+}
 
+int checkValidation( int min , int max ) {
+  while( true ) {
+    std::string input {};
+    std::cin >> input ;
+
+    if ( input == "q" ) {
+      std::exit(0);
+    }
+
+    if ( !std::cin ) {
+      if ( std::cin.eof() ) {
+	std::exit(0);
+      }
+      std::cout << "That is an invalid input. Try again: ";
+      std::cin.clear();
+      ignoreLine();
+      continue;
+    }
+    int num {};
+    try {
+      std::size_t pos {};
+      num  = { std::stoi(input , &pos ) };
+      if ( num < min || num > max ) {
+	std::cout << "That is an invalid input. Try again: ";
+	ignoreLine();
+	continue;
+      }
+      if ( pos != input.size() ) {
+	std::cout << "That is an invalid input. Try again : ";
+	continue;
+      }
+    }
+    catch ( const std::invalid_argument& ) {
+      std::cout << "That is an invalid input. Try again: ";
+      continue;
+    }
+    catch ( const std::out_of_range& ) {
+      std::cout << "That is an invalid input. Try again: ";
+      continue;
+    }
+    return num ;
+  }
+}
+      
 class Player {
 private :
   std::string m_name {};
-  Potion::Type m_potionInventory {};
+  std::array<int , Potion::Type::count > m_potionInventory {};
   int m_goldAmount {};
 public :
-  Player ( std::string_view name , Potion::Type type , int gold )
-    : m_name { name } , m_potionInventory { type } , m_goldAmount { gold } {}
+  Player ( std::string_view name  , int gold )
+    : m_name { name } , m_goldAmount { gold } {}
   // getter function
   std::string getName() const { return m_name ; };
-  Potion::Type getPotion() const { return m_potionInventory; }
+  const std::array<int,Potion::Type::count>& getConstInventory() const {return m_potionInventory;}
+  std::array<int , Potion::Type::count >& getInventory() { return m_potionInventory;}
   int getGold() const { return m_goldAmount; }
+
 };
 
 void welcomeSection( std::string& name ) {
@@ -76,11 +127,17 @@ void shop( std::array<std::string_view,Potion::Type::count>& arr1, std::array<in
     std::cout << i << ") " << arr1[i] << " costs " << arr2[i] << '\n';
   }
 }
+void bayFromShop( int& num ) {
+  std::cout << "Enter the number of the potion you`d like to buy, or 'q' to quit : ";
+  num = checkValidation( 0, 3 ) ;
+}
 
 int main() {
   std::string name {};
   welcomeSection( name );
   shop(Potion::potionNames , Potion::potionCosts );
+  int choice {};
+  bayFromShop( choice ) ;
   endSection();
   
   return 0;
